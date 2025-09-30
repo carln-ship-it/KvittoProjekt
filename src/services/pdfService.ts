@@ -30,6 +30,8 @@ export const convertPdfToImagesBase64 = async (file: File): Promise<string[]> =>
     canvas.height = viewport.height;
     canvas.width = viewport.width;
 
+    // The type definitions for this version of pdfjs-dist might require passing the canvas context differently.
+    // The object passed to render() is a RenderParameters object.
     // FIX: The type definitions for this version of pdfjs-dist require the 'canvas' property.
     await page.render({ canvasContext: context, viewport: viewport, canvas }).promise;
     
