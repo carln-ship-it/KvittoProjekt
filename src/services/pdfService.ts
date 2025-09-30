@@ -1,6 +1,6 @@
 import * as pdfjsLib from 'pdfjs-dist';
 // Use the vite-specific '?url' import to get the path to the worker script.
-// The .js version is used instead of .min.js for compatibility with the installed pdfjs-dist version.
+// The non-minified .js version is generally more compatible with bundlers like Vite.
 import worker from 'pdfjs-dist/build/pdf.worker.js?url';
 
 // Set the worker source once
@@ -30,8 +30,6 @@ export const convertPdfToImagesBase64 = async (file: File): Promise<string[]> =>
     canvas.height = viewport.height;
     canvas.width = viewport.width;
 
-    // The type definitions for this version of pdfjs-dist might require passing the canvas context differently.
-    // The object passed to render() is a RenderParameters object.
     // FIX: The type definitions for this version of pdfjs-dist require the 'canvas' property.
     await page.render({ canvasContext: context, viewport: viewport, canvas }).promise;
     
