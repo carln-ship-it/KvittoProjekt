@@ -1,0 +1,5 @@
+{
+  "name": "Kvitto Tolkaren",
+  "description": "En applikation för att ladda upp skannade kvitton i PDF-format, extrahera text och strukturera information (datum, butik, varor, priser) med hjälp av Gemini API. Resultaten presenteras och kan exporteras som en CSV-fil.",
+  "requestFramePermissions": []
+}
