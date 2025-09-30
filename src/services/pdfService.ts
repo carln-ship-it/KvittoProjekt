@@ -1,7 +1,7 @@
 import * as pdfjsLib from 'pdfjs-dist';
 // Use the vite-specific '?url' import to get the path to the worker script.
-// The non-minified .js version is generally more compatible with bundlers like Vite.
-import worker from 'pdfjs-dist/build/pdf.worker.js?url';
+// The non-minified .mjs version is generally more compatible with bundlers like Vite.
+import worker from 'pdfjs-dist/build/pdf.worker.mjs?url';
 
 // Set the worker source once
 pdfjsLib.GlobalWorkerOptions.workerSrc = worker;
