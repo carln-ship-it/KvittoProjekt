@@ -1,6 +1,6 @@
 import * as pdfjsLib from 'pdfjs-dist';
 // Use the vite-specific '?url' import to get the path to the worker script.
-// The .js version is used instead of .mjs to ensure compatibility with Vite's module handling.
+// The .js version is used instead of .min.js for compatibility with the installed pdfjs-dist version.
 import worker from 'pdfjs-dist/build/pdf.worker.js?url';
 
 // Set the worker source once
