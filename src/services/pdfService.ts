@@ -1,7 +1,7 @@
 import * as pdfjsLib from 'pdfjs-dist';
 // Use the vite-specific '?url' import to get the path to the worker script.
-// The non-minified .js version is generally more compatible with bundlers like Vite.
-import worker from 'pdfjs-dist/build/pdf.worker.js?url';
+// The .mjs version is the ES Module version, which is more compatible with Vite.
+import worker from 'pdfjs-dist/build/pdf.worker.mjs?url';
 
 // Set the worker source once
 pdfjsLib.GlobalWorkerOptions.workerSrc = worker;
@@ -30,8 +30,8 @@ export const convertPdfToImagesBase64 = async (file: File): Promise<string[]> =>
     canvas.height = viewport.height;
     canvas.width = viewport.width;
 
-    // FIX: The type definitions for this version of pdfjs-dist require the 'canvas' property.
-    await page.render({ canvasContext: context, viewport: viewport, canvas }).promise;
+    // FIX: The `render` method's `RenderParameters` type requires the `canvas` property to be passed.
+    await page.render({ canvasContext: context, viewport: viewport, canvas: canvas }).promise;
     
     // OPTIMIZATION: Convert canvas to JPEG. It's much smaller for scanned documents.
     // 0.8 represents 80% quality, a great balance for size vs readability for the AI.
