@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { searchReceipts, getAllReceiptsForExport } from '../services/databaseService';
+import { searchReceipts, getAllReceiptsForExport, deleteReceipt } from '../services/databaseService';
 import { exportToExcel } from '../utils/excelHelper';
 import type { ExtractedReceiptData } from '../types';
 import { Spinner } from './Spinner';
@@ -75,6 +75,18 @@ export const DatabaseSearch: React.FC = () => {
             setIsExporting(false);
         }
     };
+    
+    const handleDeleteReceipt = async (receiptId: number) => {
+        if (window.confirm('Är du säker på att du vill radera detta kvitto permanent?')) {
+            try {
+                await deleteReceipt(receiptId);
+                setResults(prevResults => prevResults.filter(r => r.id !== receiptId));
+            } catch (error) {
+                console.error('Failed to delete receipt:', error);
+                alert('Kunde inte radera kvittot.');
+            }
+        }
+    };
 
 
     return (
@@ -134,7 +146,11 @@ export const DatabaseSearch: React.FC = () => {
                     results.length > 0 ? (
                         <div className="space-y-4">
                             {results.map((receipt) => (
-                                <DatabaseReceiptCard key={receipt.id} receiptData={receipt} />
+                                <DatabaseReceiptCard 
+                                    key={receipt.id} 
+                                    receiptData={receipt} 
+                                    onDelete={() => handleDeleteReceipt(receipt.id!)}
+                                />
                             ))}
                         </div>
                     ) : (

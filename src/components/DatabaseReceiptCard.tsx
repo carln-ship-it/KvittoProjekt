@@ -1,9 +1,10 @@
 import React from 'react';
 import type { ExtractedReceiptData, ReceiptItem } from '../types';
-import { IconFileText, IconCalendar, IconStore, IconList, IconCurrencyDollar, IconPercentage } from './Icons';
+import { IconFileText, IconCalendar, IconStore, IconList, IconCurrencyDollar, IconPercentage, IconTrash } from './Icons';
 
 interface DatabaseReceiptCardProps {
   receiptData: ExtractedReceiptData;
+  onDelete: () => void;
 }
 
 const ItemRow: React.FC<{ item: ReceiptItem, index: number }> = ({ item, index }) => (
@@ -14,7 +15,7 @@ const ItemRow: React.FC<{ item: ReceiptItem, index: number }> = ({ item, index }
   </tr>
 );
 
-export const DatabaseReceiptCard: React.FC<DatabaseReceiptCardProps> = ({ receiptData }) => {
+export const DatabaseReceiptCard: React.FC<DatabaseReceiptCardProps> = ({ receiptData, onDelete }) => {
   const { fileName, date, normalizedStoreName, storeName, items, totalAmount, currency, vatAmount } = receiptData;
 
   const getDisplayName = () => {
@@ -26,8 +27,17 @@ export const DatabaseReceiptCard: React.FC<DatabaseReceiptCardProps> = ({ receip
 
 
   return (
-    <div className="bg-slate-750 shadow-lg rounded-lg p-4">
-      <div className="flex items-center space-x-2 mb-3">
+    <div className="bg-slate-750 shadow-lg rounded-lg p-4 relative">
+      <button 
+        onClick={onDelete}
+        className="absolute top-2 right-2 p-1.5 text-slate-400 hover:bg-red-800 hover:text-white rounded-full transition-colors"
+        aria-label="Radera kvitto"
+        title="Radera kvitto"
+      >
+        <IconTrash className="h-5 w-5" />
+      </button>
+
+      <div className="flex items-center space-x-2 mb-3 pr-8">
         <IconFileText className="h-5 w-5 text-slate-400" />
         <h3 className="font-medium text-slate-200 truncate" title={fileName ?? undefined}>{fileName}</h3>
       </div>

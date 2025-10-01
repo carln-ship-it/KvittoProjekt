@@ -53,11 +53,30 @@ export const saveReceipt = async (receiptData: ExtractedReceiptData, fileName: s
 
     const receiptId = await receiptsStore.add(receiptToSave);
 
-    const itemPromises = receiptData.items.map(item =>
+    // FIX: Ensure receiptData.items is an array before mapping. Gemini can sometimes return null.
+    const itemsToSave = Array.isArray(receiptData.items) ? receiptData.items : [];
+    const itemPromises = itemsToSave.map(item =>
         itemsStore.add({ ...item, receiptId })
     );
 
     await Promise.all([...itemPromises, tx.done]);
+};
+
+export const deleteReceipt = async (receiptId: number): Promise<void> => {
+    const db = await initDB();
+    const tx = db.transaction([RECEIPTS_STORE, ITEMS_STORE], 'readwrite');
+    const receiptsStore = tx.objectStore(RECEIPTS_STORE);
+    const itemsStore = tx.objectStore(ITEMS_STORE);
+    const itemsIndex = itemsStore.index('receiptId');
+
+    // Delete the receipt itself
+    const deleteReceiptPromise = receiptsStore.delete(receiptId);
+
+    // Find and delete all associated items
+    const itemKeysToDelete = await itemsIndex.getAllKeys(receiptId);
+    const deleteItemsPromises = itemKeysToDelete.map(key => itemsStore.delete(key));
+    
+    await Promise.all([deleteReceiptPromise, ...deleteItemsPromises, tx.done]);
 };
 
 
